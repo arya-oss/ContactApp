@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/show_map"
+        android:title="Map"
+        android:icon="@mipmap/ic_place_black"
+        android:showAsAction="ifRoom"
+        />
+    <item android:id="@+id/show_save"
+        android:title="Save"
+        android:icon="@mipmap/ic_save_black"
+        android:showAsAction="ifRoom"
+        />
+    <item android:id="@+id/show_delete"
+        android:title="Delete"
+        android:icon="@mipmap/ic_delete_black"
+        android:showAsAction="ifRoom"
+        />
+</menu>
