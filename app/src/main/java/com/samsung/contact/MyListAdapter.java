@@ -11,6 +11,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -18,11 +19,17 @@ import java.util.HashMap;
  * Created by Rajmani on 15-06-16.
  */
 public class MyListAdapter extends BaseAdapter {
+    public static final int ROW_ID = 1;
     private Activity activity;
     private ArrayList<HashMap<String, String>> data;
     private static LayoutInflater layoutInflater;
     private ImageView imageView;
 
+    /**
+     *
+     * @param activity
+     * @param data
+     */
     public MyListAdapter(Activity activity, ArrayList<HashMap<String,String>> data) {
         this.activity = activity;
         this.data = data;
@@ -45,6 +52,13 @@ public class MyListAdapter extends BaseAdapter {
         return position;
     }
 
+    /**
+     *
+     * @param position
+     * @param convertView
+     * @param parent
+     * @return
+     */
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View view = convertView;
@@ -54,10 +68,13 @@ public class MyListAdapter extends BaseAdapter {
         TextView phone = (TextView)view.findViewById(R.id.list_phone);
         ImageView imageView = (ImageView)view.findViewById(R.id.list_image);
         HashMap<String, String> row = data.get(position);
+        int id = Integer.parseInt(row.get(DBHelper.COLUMN_ID));
         fullName.setText(row.get(DBHelper.COLUMN_FNAME)+" "+row.get(DBHelper.COLUMN_LNAME));
         phone.setText(row.get(DBHelper.COLUMN_PHONE));
+        view.setTag(ROW_ID, id);
         Bitmap bmp = null;
-        bmp = BitmapFactory.decodeFile(row.get(DBHelper.COLUMN_PICTURE));
+        File file = new File(row.get(DBHelper.COLUMN_PICTURE));
+        bmp = BitmapFactory.decodeFile(file.getAbsolutePath());
         if(null == bmp) {
             imageView.setImageDrawable(view.getResources().getDrawable(R.drawable.user));
         } else {

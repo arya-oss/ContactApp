@@ -94,7 +94,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public Integer deleteContact (Integer id)
     {
         SQLiteDatabase db = this.getWritableDatabase();
-        return db.delete(TABLE_NAME, "id = ? ", new String[] { Integer.toString(id) });
+        return db.delete(TABLE_NAME, COLUMN_ID+" = ? ", new String[] { Integer.toString(id) });
     }
 
     public ArrayList<HashMap<String, String>> getAllContacts()
@@ -109,11 +109,12 @@ public class DBHelper extends SQLiteOpenHelper {
 
         while(res.isAfterLast() == false){
             hashMap = new HashMap<>();
+            hashMap.put(COLUMN_ID, res.getString(0));
             hashMap.put(COLUMN_FNAME, res.getString(1));
             hashMap.put(COLUMN_LNAME, res.getString(2));
             hashMap.put(COLUMN_PHONE, res.getString(3));
             hashMap.put(COLUMN_PICTURE, res.getString(6));
-            Log.d(TAG, hashMap.toString());
+            // Log.d(TAG, hashMap.toString());
             contact_list.add(hashMap);
             res.moveToNext();
         }

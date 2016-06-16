@@ -1,6 +1,9 @@
 package com.samsung.contact;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -9,10 +12,12 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import java.io.FileDescriptor;
 import java.io.IOException;
@@ -43,6 +48,7 @@ public class AddActivity extends AppCompatActivity {
         email = (EditText) findViewById(R.id.edit_email);
         location = (EditText) findViewById(R.id.edit_latlng);
         dbHelper = new DBHelper(this);
+        verifyStoragePermissions(this);
     }
 
     public void setEmpty() {
@@ -53,7 +59,7 @@ public class AddActivity extends AppCompatActivity {
         last_name.setText("");
         phone.setText("");
         email.setText("");
-        email.setText("");
+        location.setText("");
     }
 
     public void resetButton(View v) {
@@ -67,6 +73,7 @@ public class AddActivity extends AppCompatActivity {
         String eml = email.getText().toString();
         String latlng = location.getText().toString();
         dbHelper.insertContact(fname, lname, ph, eml, latlng, picture_path);
+        Toast.makeText(this, "Contact Added", Toast.LENGTH_SHORT).show();
         setEmpty();
     }
 
@@ -106,5 +113,23 @@ public class AddActivity extends AppCompatActivity {
         Bitmap image = BitmapFactory.decodeFileDescriptor(fileDescriptor);
         parcelFileDescriptor.close();
         return image;
+    }
+
+    private static final int REQUEST_EXTERNAL_STORAGE = 1;
+    private static String[] PERMISSIONS_STORAGE = {
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+    };
+
+    /**
+     * Checks if the app has permission to write to device storage
+     * If the app does not has permission then the user will be prompted to grant permission
+     * @param activity
+     */
+    public static void verifyStoragePermissions(Activity activity) {
+        int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(activity,PERMISSIONS_STORAGE,REQUEST_EXTERNAL_STORAGE);
+        }
     }
 }

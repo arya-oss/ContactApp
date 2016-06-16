@@ -11,7 +11,8 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:src="@drawable/user"
-        android:onClick="setImageAndPath" />
+        android:onClick="setImageAndPath"
+        android:contentDescription="@string/show_contact_display" />
 
     <EditText
         android:layout_width="wrap_content"
