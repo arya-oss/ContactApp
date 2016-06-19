@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * Created by Rajmani on 14-06-16.
+ * Created by Rajmani on 19-06-16.
  */
 public class DBHelper extends SQLiteOpenHelper {
     public static final String TAG = "DBHelper";
@@ -87,7 +87,7 @@ public class DBHelper extends SQLiteOpenHelper {
         contentValues.put(COLUMN_LOCATION, location);
         contentValues.put(COLUMN_PICTURE, picture);
         db.update(TABLE_NAME, contentValues, COLUMN_ID + " = ? ", new String[] { Integer.toString(id) } );
-        Log.d(TAG, "Updateing Contact");
+        Log.d(TAG, "Updating Contact");
         return true;
     }
 
@@ -114,7 +114,6 @@ public class DBHelper extends SQLiteOpenHelper {
             hashMap.put(COLUMN_LNAME, res.getString(2));
             hashMap.put(COLUMN_PHONE, res.getString(3));
             hashMap.put(COLUMN_PICTURE, res.getString(6));
-            // Log.d(TAG, hashMap.toString());
             contact_list.add(hashMap);
             res.moveToNext();
         }

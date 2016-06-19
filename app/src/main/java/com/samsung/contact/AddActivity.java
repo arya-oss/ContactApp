@@ -23,7 +23,7 @@ import java.io.FileDescriptor;
 import java.io.IOException;
 
 /**
- * Created by Rajmani on 15-06-16.
+ * Created by Rajmani on 19-06-16.
  */
 public class AddActivity extends AppCompatActivity {
     private ImageView imageView;
@@ -131,5 +131,12 @@ public class AddActivity extends AppCompatActivity {
         if (permission != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(activity,PERMISSIONS_STORAGE,REQUEST_EXTERNAL_STORAGE);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+        dbHelper.close();
     }
 }

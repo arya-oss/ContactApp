@@ -22,6 +22,7 @@ import android.widget.ListView;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.StringTokenizer;
 
 /**
  * <p>MainActivity for contact app</p>
@@ -33,10 +34,6 @@ public class MainActivity extends AppCompatActivity {
     private ListView listView;
     private DBHelper dbHelper;
     private MyListAdapter myListAdapter;
-
-    public static final int REQUEST_RESULT_ADD = 2;
-    public static final int REQUEST_RESULT_DELETE = 3;
-    public static final int REQUEST_RESULT_UPDATE = 4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,16 +48,17 @@ public class MainActivity extends AppCompatActivity {
      */
     private void showList() {
         dbHelper = new DBHelper(this);
-        ArrayList<HashMap<String, String>> contacts = dbHelper.getAllContacts();
+        final ArrayList<HashMap<String, String>> contacts = dbHelper.getAllContacts();
         listView = (ListView)findViewById(R.id.listView);
         myListAdapter = new MyListAdapter(this, contacts);
         listView.setAdapter(myListAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.d(TAG, "Clicked on item "+position);
                 Intent intent;
-                int _tmp_id = Integer.parseInt(view.getTag(MyListAdapter.ROW_ID).toString());
+                HashMap<String, String> _tmp = (HashMap<String, String>) myListAdapter.getItem(position);
+                int _tmp_id = Integer.parseInt(_tmp.get(DBHelper.COLUMN_ID));
+                Log.d(TAG, "Clicked on item "+position+ " id " + _tmp_id);
                 intent = new Intent(getApplicationContext(), DisplayActivity.class);
                 intent.putExtra(DBHelper.COLUMN_ID, _tmp_id);
                 startActivity(intent);
@@ -71,28 +69,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
+        myListAdapter.refreshList(dbHelper.getAllContacts());
     }
-
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
-//        super.onActivityResult(requestCode, resultCode, intent);
-//        if (resultCode == RESULT_OK && null != intent) {
-//            Bundle bundle = intent.getExtras();
-//            switch (requestCode){
-//                case REQUEST_RESULT_ADD:
-//                    Log.d(TAG, "add "+bundle.get(DBHelper.COLUMN_ID));
-//                    break;
-//                case REQUEST_RESULT_DELETE:
-//                    Log.d(TAG, "delete "+bundle.get(DBHelper.COLUMN_ID));
-//                    break;
-//                case REQUEST_RESULT_UPDATE:
-//                    Log.d(TAG, "update "+bundle.get(DBHelper.COLUMN_ID));
-//                    break;
-//                default:
-//                    Log.d(TAG, "unidentified activity result");
-//            }
-//        }
-//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -106,7 +84,8 @@ public class MainActivity extends AppCompatActivity {
 
         switch(item.getItemId()) {
             case R.id.add:
-                startActivity(new Intent(this, AddActivity.class));
+                Intent intent = new Intent(getApplicationContext(), AddActivity.class);
+                startActivity(intent);
             default:
                 return super.onOptionsItemSelected(item);
         }

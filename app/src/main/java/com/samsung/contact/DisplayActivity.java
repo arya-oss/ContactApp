@@ -25,6 +25,7 @@ import java.io.File;
 import java.io.FileDescriptor;
 import java.io.IOException;
 import java.net.URI;
+import java.util.Locale;
 
 /**
  * Created by Rajmani on 15-06-16.
@@ -41,6 +42,7 @@ public class DisplayActivity extends AppCompatActivity {
     private DBHelper dbHelper;
     private int id=0;
     private static int RESULT_LOAD_IMAGE = 1;
+    private static int REQUEST_LOCATION = 3;
     private String picture_path = "";
 
     @Override
@@ -85,19 +87,21 @@ public class DisplayActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
         super.onOptionsItemSelected(item);
-
         switch(item.getItemId()) {
             case R.id.show_map:
                 Log.d(TAG, "Wants to check it on Map");
-                break;
-            case R.id.show_save:
-                Log.d(TAG, "Wants to Save it.");
-                updateButton();
+                String uri = "geo:"+location.getText().toString()+"?z=17";
+                Intent intent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(uri));
+                startActivity(intent);
                 break;
             case R.id.show_delete:
                 Log.d(TAG, "Wants to delete it.");
                 dbHelper.deleteContact(id);
+                dbHelper.close();
                 finish();
+            case R.id.show_save:
+                Log.d(TAG, "Wants to Save it.");
+                updateButton();
                 break;
             default:
                 return super.onOptionsItemSelected(item);
@@ -169,5 +173,12 @@ public class DisplayActivity extends AppCompatActivity {
         if (permission != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(activity,PERMISSIONS_STORAGE,REQUEST_EXTERNAL_STORAGE);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        dbHelper.close();
+        finish();
+        return;
     }
 }
